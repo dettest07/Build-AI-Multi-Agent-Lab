@@ -93,17 +93,34 @@ harness = ความสามารถถาวรที่ Claude Code / Open
 - MCP = งานผลิต — **ไม่ใช่**ท่อระหว่างสอง CLI  
 - Swarm หยุดเมื่อ done **หรือ** ครบ **20 turns**
 
-## คำสั่งหลัก
+## Commands
+
+Node ≥ 22.12 · Windows/PowerShell เป็นสภาพแวดล้อมหลัก
 
 ```powershell
-npm install
-npm run dev
-npm test
-npm run test:labs
-npm run build
-npm start
-node scripts/create-course-issues.mjs
+npm run dev                     # astro dev → http://localhost:4321
+npm test                        # vitest: tests/** · ไม่รวม tests/labs (CI รันแค่ npm test + build)
+npm run test:labs               # vitest --config vitest.labs.config.ts → tests/labs เท่านั้น
+npx vitest run tests/smoke.test.ts        # ไฟล์เดียว (-t "<name>" = รายเทสต์)
+npx vitest run --config vitest.labs.config.ts tests/labs/lab05-api.test.ts
+npm run test:e2e                # playwright/ ต่อ PLAYWRIGHT_BASE_URL (default 127.0.0.1:4321) — start server ก่อน
+npm run build && npm start      # SSR build → node ./dist/server/entry.mjs
+node scripts/create-course-issues.mjs     # = npm run create-issues
 ```
+
+- **ไม่มี linter กำหนดไว้** — อย่าเดาว่ามี `npm run lint`
+- `tests/labs/` ตั้งใจให้ **แดงบน template สด** (lab05 จะเขียวเมื่อ implement db stubs ใน Lab 05) — แยกออกจาก `npm test`/CI
+- ห้ามใส่ "lab N" / "แล็บ" ใน markup ที่ render ของ `src/**/*.astro|html` — `tests/public-site.test.ts` จะ fail (คอมเมนต์ใน `.ts` ทำได้)
+- Setup ครั้งแรก: copy `.env.example` → `.env` · `opencode.json` / `.mcp.json` ทำจาก `*.example` (Lab 00) — ห้าม commit ไฟล์จริง
+
+## Structural quirks
+
+- **Astro SSR** (`output: 'server'` + `@astrojs/node` standalone) ที่ port 4321 · API routes ใน `src/pages/api/*.ts` ตั้ง `prerender = false`
+- **เนื้อหาโปรไฟล์ file-driven:** `src/lib/profile.ts` parse `docs/PROFILE.md` ตอน request — แก้ไฟล์นั้น = เว็บเปลี่ยนทันที (Dockerfile copy `docs/` ลง image เพราะงานนี้)
+- **Persistence (OpenCode-owned):** `src/lib/db.ts` = better-sqlite3 ที่ `$DATA_DIR/site.sqlite` (default `./data`) · stubs throw `NOT_IMPLEMENTED…` → API ตอบ **501** จนกว่า Lab 05
+- **Deploy:** Dockerfile (multi-stage, build native better-sqlite3) → Coolify ที่ `SITE_URL` (`astro.config.mjs` อ่าน env นี้)
+- CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) = `npm ci` → `npm test` → `npm run build` เท่านั้น — ไม่รัน labs/e2e
+- Scaffolding ของคอร์สอยู่นอก `src/`: `labs/`, `.github/course-issues/`, `.claude/agents|skills`, `.opencode/agents|skills`, `docs/*.example`
 
 ## ห้าม
 
