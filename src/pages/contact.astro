@@ -1,43 +1,107 @@
 ---
+// Contact per DECISIONS D7: plain mailto: is the primary channel (works without JS).
+// The form stays hidden until the backend handoff says POST /api/contact is live (Lab 05).
+// When enabled: work type is prefixed onto the first line of `message` (API contract unchanged),
+// raw API errors are never shown, and 501 falls back to the email above.
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadProfile } from '../lib/profile';
+
+const FORM_ENABLED = false;
+
+const profile = loadProfile();
+const workTypes = ['งานพัฒนา .NET (freelance)', 'ที่ปรึกษา architecture / security', 'อื่น ๆ'];
 ---
-<BaseLayout title="Contact">
+<BaseLayout page="ติดต่อ">
   <section class="card">
-    <h1>Contact</h1>
-    <p>ฟอร์มนี้โพสต์ไปที่ <code>POST /api/contact</code></p>
-    <form id="contact-form">
-      <label for="name">Name</label>
-      <input id="name" name="name" required maxlength="80" />
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" required maxlength="120" />
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="5" required maxlength="2000"></textarea>
-      <p style="margin-top:1rem"><button type="submit">Send</button></p>
-      <p id="status" role="status" aria-live="polite"></p>
-    </form>
+    <h1>คุยเรื่องโปรเจกต์</h1>
+    {profile.email ? (
+      <>
+        <p>เล่าสิ่งที่คุณกำลังทำ ปัญหาที่เจอ หรือระบบที่อยากให้ช่วยดู แล้วส่งอีเมลถึงผมได้โดยตรง</p>
+        <p class="email">
+          <a class="btn" href={`mailto:${profile.email}`}>{profile.email}</a>
+          <button type="button" class="btn secondary" id="copy-email" data-email={profile.email} hidden>
+            คัดลอกอีเมล
+          </button>
+          <span id="copy-status" role="status" aria-live="polite"></span>
+        </p>
+      </>
+    ) : (
+      <p>ช่องทางติดต่อกำลังจะเปิดให้ใช้งานเร็ว ๆ นี้</p>
+    )}
   </section>
+
+  {FORM_ENABLED && (
+    <section class="card">
+      <h2>หรือฝากข้อความไว้ที่นี่</h2>
+      <form id="contact-form" data-email={profile.email}>
+        <label for="worktype">ประเภทงาน</label>
+        <select id="worktype" name="worktype">
+          {workTypes.map((t) => <option value={t}>{t}</option>)}
+        </select>
+        <label for="name">ชื่อ</label>
+        <input id="name" name="name" required maxlength="80" autocomplete="name" />
+        <label for="email">อีเมล</label>
+        <input id="email" name="email" type="email" required maxlength="120" autocomplete="email" />
+        <label for="message">ข้อความ</label>
+        <textarea id="message" name="message" rows="5" required maxlength="1900"></textarea>
+        <p style="margin-top:1rem"><button class="btn" type="submit">ส่งข้อความ</button></p>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  )}
 </BaseLayout>
+
+<style>
+  .email { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+</style>
+
 <script>
-  const form = document.getElementById('contact-form');
+  const copyBtn = document.getElementById('copy-email') as HTMLButtonElement | null;
+  const copyStatus = document.getElementById('copy-status');
+  if (copyBtn && navigator.clipboard) {
+    copyBtn.hidden = false;
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(copyBtn.dataset.email || '');
+        if (copyStatus) copyStatus.textContent = 'คัดลอกแล้ว';
+      } catch {
+        if (copyStatus) copyStatus.textContent = 'คัดลอกไม่สำเร็จ';
+      }
+    });
+  }
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('status');
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (!status) return;
     const fd = new FormData(form);
-    const payload = Object.fromEntries(fd.entries());
-    status.textContent = 'Sending…';
+    const fallback = form.dataset.email
+      ? `ตอนนี้ยังส่งผ่านฟอร์มไม่ได้ กรุณาส่งอีเมลถึง ${form.dataset.email}`
+      : 'ตอนนี้ยังส่งผ่านฟอร์มไม่ได้ กรุณาลองใหม่ภายหลัง';
+    const payload = {
+      name: String(fd.get('name') || ''),
+      email: String(fd.get('email') || ''),
+      message: `[${fd.get('worktype') || 'อื่น ๆ'}]\n${fd.get('message') || ''}`,
+    };
+    status.textContent = 'กำลังส่ง…';
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      status.textContent = res.ok ? 'Sent. Thank you!' : `Error: ${data.error || res.status}`;
-      if (res.ok) form.reset();
-    } catch (err) {
-      status.textContent = 'Network error';
+      if (res.ok) {
+        status.textContent = 'ได้รับแล้ว ผมจะติดต่อกลับทางอีเมล';
+        form.reset();
+      } else if (res.status === 400) {
+        status.textContent = 'ข้อมูลไม่ครบหรือไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+      } else {
+        status.textContent = fallback;
+      }
+    } catch {
+      status.textContent = fallback;
     }
   });
 </script>
-

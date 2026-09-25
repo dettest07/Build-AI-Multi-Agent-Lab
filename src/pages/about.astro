@@ -1,14 +1,22 @@
 ---
+// About shows the current Bio until the owner rewrites it in "ผม" voice (DECISIONS D3 · L5).
+// Tech stack lives in the Proof line here, no separate section (D12).
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
+const paragraphs = profile.bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 ---
-<BaseLayout title={`About · ${profile.name}`}>
+<BaseLayout page="เกี่ยวกับ">
   <article class="card">
-    <h1>About</h1>
-    <p>{profile.bio}</p>
-    <p>เรื่องราวเพิ่มเติม — timeline, skills และลิงก์จะอัปเดตเร็ว ๆ นี้</p>
+    <h1>เกี่ยวกับผม</h1>
+    {paragraphs.map((p) => <p>{p}</p>)}
+    {profile.proof && (
+      <>
+        <h2>เครื่องมือหลัก</h2>
+        <p>{profile.proof}</p>
+      </>
+    )}
+    <p><a class="btn" href="/contact">คุยเรื่องโปรเจกต์</a></p>
   </article>
 </BaseLayout>
-

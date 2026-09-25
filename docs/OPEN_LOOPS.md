@@ -3,26 +3,28 @@
 > คัดลอกเป็น `docs/OPEN_LOOPS.md` ใน Lab 00 · งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ  
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 +07:00
+Last updated: 2026-09-25 +07:00 (Claude · Lab 04)
 
 | ID | Task | Owner | Priority | Trigger / due | Notes |
 |---|---|---|---|---|---|
 | L1 | สร้าง STATUS + OPEN_LOOPS จาก example | human | P0 | Lab 00 | หลัง copy แล้วลบแถวนี้ |
-| L2 | `loadProfile()` อ่านได้แค่บรรทัดแรกของแต่ละหัวข้อ (Interests ได้ 1 ข้อ, Bio ได้ย่อหน้าแรก) — regex `$` + flag `m` ที่ `src/lib/profile.ts:42` | Claude | P1 | Lab 04 | พบตอน Lab 01 · ยังไม่แก้ · scope parser ตาม DECISIONS D6 |
-| L3 | ยืนยันอีเมลใน `## Contact` ของ PROFILE (ช่องทางเดียว · แนะนำอีเมลงานแยก) + ลบบรรทัด github/linkedin "—" | human | P0 | ก่อน Lab 04 · ship gate | DECISIONS D7 · D14 · DEBATE R3 |
-| L4 | repo public หรือ private? `docs/` (อีเมล · Brainstorm · DEBATE) ถูกอ่านได้ถ้า public | human | P0 | ก่อน Lab 08 · ship gate | DECISIONS D14 · ถ้า public ต้องลบอีเมลส่วนตัว/Brainstorm ออกจาก `docs/` |
-| L5 | เขียน Bio ใหม่เป็น "ผม" · ปรับ Interests (security/AI + คำอธิบาย) · เพิ่ม `## Services` 1 หลัก + 1 รอง · ประเภทปัญหาที่เคยแก้ 3–5 ข้อ | human | P1 | Lab 04 · ship gate (Bio) | DECISIONS D2–D4, D6, D12 · รูปแบบ `- ชื่อ — คำอธิบาย` |
-| L6 | Guestbook ใช้ `innerHTML` (`src/pages/guestbook.astro`) → `textContent` ก่อนเปิดใช้ · v1 ถอดออกจาก nav/Home | Claude | P1 | Lab 04 | DECISIONS D9 |
-| L7 | field ประเภทงานใน `POST /api/contact` + นโยบายเก็บ/ลบข้อมูล Contact | OpenCode | P2 | Lab 05 (handoff) | DECISIONS D7 · D9 · v1 ใส่ในบรรทัดแรกของ `message` · handoff ต้องระบุ honeypot field + rate limit |
-| L8 | ยืนยันคำว่า "ประเมินฟรี" / "ประเมินฟรีหลังคุย" และเวลาตอบกลับ (ถ้าจะใส่) | human | P2 | Lab 04 | DECISIONS D7 · D8 · ระหว่างรอใช้ "คุยเรื่องโปรเจกต์" |
-| L9 | `tests/public-site.test.ts` ไม่จับข้อความใน frontmatter (meta อ้างคอร์สหลุด) + test ไม่ตก FALLBACK | Claude | P1 | Lab 04 | DECISIONS D10 · D11 · DEBATE R8/R9 |
+| L3 | ยืนยันอีเมลใน `## Contact` ของ PROFILE (ช่องทางเดียว · แนะนำอีเมลงานแยก) + ลบบรรทัด github/linkedin "—" | human | P0 | ship gate | DECISIONS D7 · D14 · ตอนนี้หน้า Contact แสดงอีเมลจาก PROFILE ตรง ๆ |
+| L4 | repo public หรือ private? `docs/` (อีเมล · Brainstorm · DEBATE) ถูกอ่านได้ถ้า public | human | P0 | ก่อน push PROFILE · ship gate | DECISIONS D14 · `docs/PROFILE.md` ยังไม่เคย commit — ตัดสินก่อน push |
+| L5 | เขียน Bio ใหม่เป็น "ผม" · ปรับ Interests (security/AI + คำอธิบาย) · เพิ่ม `## Services` 1 หลัก + 1 รอง · ประเภทปัญหาที่เคยแก้ 3–5 ข้อ | human | P1 | ship gate (Bio) | DECISIONS D2–D4, D6, D12 · รูปแบบ `- ชื่อ — คำอธิบาย` · UI รองรับ Services แล้ว (Home แสดงเมื่อมีหัวข้อ) · "ประเภทปัญหาที่เคยแก้" ยังไม่มี parser/UI — ทำเมื่อเจ้าของเขียนเนื้อหา |
+| L7 | field ประเภทงานใน `POST /api/contact` + นโยบายเก็บ/ลบข้อมูล Contact | OpenCode | P2 | Lab 05 (handoff) | DECISIONS D7 · D9 · v1 UI ต่อ `[ประเภทงาน]\n` หน้า `message` · honeypot field + rate limit ต้องระบุใน handoff กลับ |
+| L8 | ยืนยันคำว่า "ประเมินฟรี" / "ประเมินฟรีหลังคุย" และเวลาตอบกลับ (ถ้าจะใส่) | human | P2 | ก่อน ship | DECISIONS D7 · D8 · ตอนนี้ใช้ "คุยเรื่องโปรเจกต์" |
 | L10 | บันทึก owner ของ `tests/public-site.test.ts` = frontend ในตาราง Ownership (`AGENTS.md`) | human | P2 | Lab 03 | DECISIONS D11 · ไฟล์กฎ ต้องให้เจ้าของอนุมัติ |
+| L11 | implement `insertContact` / guestbook ใน `src/lib/db.ts` + validation ให้ `npm run test:labs` เขียว | OpenCode | P1 | Lab 05 | handoff `docs/handoffs/04-claude-to-opencode.md` |
+| L12 | เปิด `FORM_ENABLED` ใน `src/pages/contact.astro` หลัง backend ยืนยัน 201 | Claude | P1 | หลัง handoff กลับจาก Lab 05 | D7 · ฟอร์มพร้อมแล้ว (select ประเภทงาน · 501 → ชี้อีเมล · ไม่โชว์ error ดิบ) |
+| L13 | ติดตั้ง browser ของ Playwright (`npx playwright install chromium`) แล้วรัน `npm run test:e2e` | human | P2 | Lab 06 | spec อัปเดตแล้ว (mailto · ไม่มีลิงก์ guestbook ใน nav) · ยังไม่เคยรันผ่านบนเครื่องนี้ |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)
 
 | ID | Task | Closed |
 |---|---|---|
-| — | — | — |
+| L2 | parser อ่านแค่บรรทัดแรก → `sections()` ใหม่ + test หลายบรรทัด / หัวข้อสุดท้าย / `\r\n` | 2026-09-25 Lab 04 (#1) |
+| L6 | Guestbook `innerHTML` → `textContent` · ถอดจาก nav/Home · noindex | 2026-09-25 Lab 04 (#8) |
+| L9 | test จับข้อความคอร์สใน frontmatter + render จริง (Container API) + ไม่ตก FALLBACK | 2026-09-25 Lab 04 (#10) |
 
 ## กฎสั้น
 
