@@ -3,8 +3,8 @@
 > คัดลอกเป็น `docs/STATUS.md` ใน Lab 00 · อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 14:50 +07:00  
-Updated by: OpenCode (backend · Lab 05)
+Last updated: 2026-09-25 15:30 +07:00  
+Updated by: Claude (QA · Lab 06 E2E)
 
 ## Current goal
 
@@ -18,6 +18,7 @@ Updated by: OpenCode (backend · Lab 05)
 - Lab 03: GitHub issues #1–#13 ครบ D1–D14
 - Lab 04 (2026-09-25): parser อ่านทุกบรรทัด + Tagline / Proof / Contact email / Services (L2 · #1) · Hero D1 (#2) · Thai nav 4 หน้า + "ติดต่อ" เป็นปุ่ม (#5) · ธีมสว่าง CSS vars + ลบข้อความ dev/คอร์ส (#9) · Contact mailto + ฟอร์มซ่อนด้วย `FORM_ENABLED` (#6 · #7) · Guestbook ออกจาก nav/Home + `textContent` + noindex (L6 · #8) · test กันหลุด 3 ชั้น (frontmatter literal + Astro Container render + ไม่ตก FALLBACK) (L9 · #10)
 - Lab 05 (2026-09-25 · branch `lab-05-backend`): `src/lib/db.ts` insertContact / insertGuestbook / listGuestbook + validation (name ≤ 80 · email ≤ 120+รูปแบบ · message ≤ 1950/500) · `src/lib/ratelimit.ts` in-memory 5 req/min/IP → 429 · honeypot field `website` → fake 201 ไม่ persist · API routes ไม่ echo error ดิบ (400/429/500 generic) · `test:labs` เขียว 2/2 · `npm test` 17/17 · build ผ่าน · handoff `05-opencode-to-claude.md`
+- Lab 06 E2E (2026-09-25 · Playwright MCP · dev server): 16/16 PASS — pages 200 · API contact/guestbook 201/400 · honeypot · XSS escaped · noindex · results in `docs/QA.md` `## E2E Playwright` · screenshots in `docs/screenshots/`
 - Persistent memory (harness `memory: project`): `.claude/agent-memory/reviewer/` · `.claude/agent-memory/frontend/`
 
 ## In progress
