@@ -47,7 +47,7 @@ Push-Location $root
 try {
   $trackedNm = @(git ls-files node_modules 2>$null)
   if ($trackedNm.Count -gt 0) {
-    Bad "node_modules is tracked in git ($($trackedNm.Count) paths) — remove from index; must not ship in template"
+    Bad "node_modules is tracked in git ($($trackedNm.Count) paths) - remove from index; must not ship in template"
   } else {
     Ok 'node_modules is not tracked in git'
   }
@@ -57,19 +57,19 @@ try {
     $test = npm test 2>&1 | Out-String
     if ($LASTEXITCODE -eq 0) { Ok 'npm test passed' } else { Bad 'npm test failed' }
   } else {
-    Info 'node_modules missing — run Lab 00 / npm install then re-run preflight'
+    Info 'node_modules missing - run Lab 00 / npm install then re-run preflight'
   }
 
   if (Test-Path '.\.claude\settings.json') {
     Ok '.claude/settings.json (Lab 00 project plugins)'
   } else {
-    Info '.claude/settings.json missing — complete Lab 00 (project-scope plugins)'
+    Info '.claude/settings.json missing - complete Lab 00 (project-scope plugins)'
   }
 
   if (Test-Path '.\opencode.json') {
     Ok 'opencode.json (Lab 00 project plugins)'
   } else {
-    Info 'opencode.json missing — complete Lab 00 (or document oh-my fallback)'
+    Info 'opencode.json missing - complete Lab 00 (or document oh-my fallback)'
   }
 
   if (Test-Path '.\.env') {
