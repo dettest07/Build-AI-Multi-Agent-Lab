@@ -1,28 +1,42 @@
 ---
 // Not part of v1 (DECISIONS D9): removed from nav and Home, noindex, reachable by URL only.
 // Entries are built with textContent (no innerHTML) to avoid stored XSS.
-// Honeypot + rate limit + persistence are backend work (Lab 05 handoff) — not implemented here.
+// Honeypot + rate limit + persistence are backend work (Lab 05 handoff) — done server-side.
+// D9 also requires moderation before going public, which nobody owns yet (Lab 07 review):
+// until then the form and entry list are not rendered, so nothing is posted or shown from here.
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const GUESTBOOK_ENABLED = false;
 ---
 <BaseLayout page="สมุดเยี่ยม" noindex>
   <section class="card">
     <h1>สมุดเยี่ยม</h1>
-    <form id="gb-form">
-      <label for="name">ชื่อ</label>
-      <input id="name" name="name" required maxlength="80" />
-      <label for="message">ข้อความ</label>
-      <textarea id="message" name="message" rows="3" required maxlength="500"></textarea>
-      <p style="margin-top:1rem"><button class="btn" type="submit">ฝากข้อความ</button></p>
-      <p id="gb-status" role="status" aria-live="polite"></p>
-    </form>
-    <div id="entries" class="card" style="margin-top:1.25rem" aria-live="polite">กำลังโหลด…</div>
+    {GUESTBOOK_ENABLED ? (
+      <>
+        <form id="gb-form">
+          <label for="name">ชื่อ</label>
+          <input id="name" name="name" required maxlength="80" />
+          <label for="message">ข้อความ</label>
+          <textarea id="message" name="message" rows="3" required maxlength="500"></textarea>
+          <div hidden aria-hidden="true">
+            <label for="website">เว็บไซต์</label>
+            <input id="website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+          <p style="margin-top:1rem"><button class="btn" type="submit">ฝากข้อความ</button></p>
+          <p id="gb-status" role="status" aria-live="polite"></p>
+        </form>
+        <div id="entries" class="card" style="margin-top:1.25rem" aria-live="polite">กำลังโหลด…</div>
+      </>
+    ) : (
+      <p>สมุดเยี่ยมยังไม่เปิดใช้งาน</p>
+    )}
   </section>
 </BaseLayout>
 <script>
   type Entry = { name: string; message: string; created_at: string };
-  const entries = document.getElementById('entries') as HTMLElement;
-  const status = document.getElementById('gb-status') as HTMLElement;
+  const entries = document.getElementById('entries');
+  const status = document.getElementById('gb-status');
   const form = document.getElementById('gb-form') as HTMLFormElement | null;
   const UNAVAILABLE = 'สมุดเยี่ยมยังไม่เปิดใช้งาน';
 
@@ -36,7 +50,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     return p;
   }
 
-  async function load() {
+  async function load(entries: HTMLElement) {
     try {
       const res = await fetch('/api/guestbook');
       if (!res.ok) {
@@ -55,25 +69,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const payload = Object.fromEntries(new FormData(form).entries());
-    try {
-      const res = await fetch('/api/guestbook', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        status.textContent = res.status === 400 ? 'ข้อมูลไม่ครบหรือไม่ถูกต้อง' : UNAVAILABLE;
-        return;
+  // Elements only exist when GUESTBOOK_ENABLED — otherwise the page makes no requests.
+  if (form && entries && status) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = Object.fromEntries(new FormData(form).entries());
+      try {
+        const res = await fetch('/api/guestbook', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          status.textContent =
+            res.status === 400
+              ? 'ข้อมูลไม่ครบหรือไม่ถูกต้อง'
+              : res.status === 429
+                ? 'ส่งถี่เกินไป กรุณาลองใหม่ในอีกสักครู่'
+                : UNAVAILABLE;
+          return;
+        }
+        status.textContent = 'ขอบคุณสำหรับข้อความ';
+        form.reset();
+        await load(entries);
+      } catch {
+        status.textContent = UNAVAILABLE;
       }
-      status.textContent = 'ขอบคุณสำหรับข้อความ';
-      form.reset();
-      await load();
-    } catch {
-      status.textContent = UNAVAILABLE;
-    }
-  });
-  load();
+    });
+    load(entries);
+  }
 </script>

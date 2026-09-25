@@ -3,12 +3,12 @@
 > คัดลอกเป็น `docs/STATUS.md` ใน Lab 00 · อ่านทุก session · **สั้น** · single-writer ต่อรอบ  
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 15:30 +07:00  
-Updated by: Claude (QA · Lab 06 E2E)
+Last updated: 2026-09-25 16:00 +07:00  
+Updated by: OpenCode (reviewer · Lab 07 Round 2)
 
 ## Current goal
 
-- Lab 05 backend เสร็จบน branch `lab-05-backend` (insertContact / guestbook / SQLite) → เปิด PR → Claude เปิด `FORM_ENABLED` (L12)
+- Lab 07: cross-model review ปิดรอบแล้ว (`docs/review-opencode.md` Round 2) → PR #14 **รอ merge จนกว่า human ปิด L4** (Must 1) · follow-up L14/L15 ถูกเปิด
 
 ## Done
 
@@ -23,25 +23,25 @@ Updated by: Claude (QA · Lab 06 E2E)
 
 ## In progress
 
-- Lab 05: เปิด PR จาก branch `lab-05-backend` (ข้อความ PR เตรียมแล้วในเซสชัน OpenCode) · รอ human commit/push
+- Lab 07 (branch `lab-06-qa-fix`): artifacts ครบ (`review-opencode.md` + `review-claude-rebuttal.md` + Round 2) · guestbook UI gate (`GUESTBOOK_ENABLED=false`) แก้แล้ว · เหลือ: human โพสต์ PR comment (ขั้น 5) + commit/push (ขั้น 6)
 
 ## Blocked
 
-- ship: L3 / L4 / L5 ยังเปิด (D14)
+- merge PR #14: L4 (repo public/private — อีเมล + Brainstorm ใน PROFILE ถูก push แล้วใน `5c56941`) · ship: L3 / L5 ยังเปิด (D14)
 
 ## Next actions
 
-1. human: commit + push branch `lab-05-backend` แล้วเปิด PR (ดูข้อความ PR ที่ OpenCode เตรียม) · merge หลัง review
-2. Claude: เปิด `FORM_ENABLED` ใน `src/pages/contact.astro` + เพิ่ม honeypot `website` — ตาม handoff `05-opencode-to-claude.md` (ยืนยัน `POST /api/contact` = 201 แล้ว · L12)
-3. human: ตัดสิน L3 / L4 (อีเมล PROFILE · public/private repo) ก่อน push PROFILE
-4. Lab 06 QA: e2e + ทดสอบ API จริงผ่าน curl/เบราว์เซอร์ (L13)
+1. human: ตัดสิน L4 (แนะนำ: ตั้ง repo private ก่อน — ทางเลือกอื่นใน `docs/review-claude-rebuttal.md`) → แล้ว merge PR #14 → PR #15 ตามลำดับ stack
+2. OpenCode: L14 — gate `POST /api/guestbook` ฝั่ง server จนกว่า moderation จะพร้อม (F1) + จัด moderation กับ human (F2)
+3. Claude: L12 เปิด `FORM_ENABLED` + honeypot `website` · L15 (F3–F5 follow-up จาก review)
+4. human: โพสต์ PR comment สรุป Lab 07 บน PR #14 (README ขั้น 5) · commit artifacts (ขั้น 6 — OpenCode commit ให้แล้ว)
 
 ## Files changed in latest session
 
-- `src/lib/db.ts` · `src/lib/ratelimit.ts` (ใหม่) · `src/pages/api/contact.ts` · `src/pages/api/guestbook.ts`
-- `docs/STATUS.md` · `docs/OPEN_LOOPS.md` · `docs/handoffs/05-opencode-to-claude.md`
+- `src/pages/guestbook.astro` · `tests/public-site.test.ts` (Claude แก้ตาม Must 2 — guestbook UI gate)
+- `docs/review-opencode.md` · `docs/review-claude-rebuttal.md` · `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
 
 ## Notes
 
 - Proposed vs Approved: brainstorm อยู่ใน `DEBATE.md` — สิ่งที่ปิดแล้วอยู่ใน `DECISIONS.md`
-- `npm test` 17/17 · `npm run build` ผ่าน · `test:labs` **เขียวแล้ว 2/2** (Lab 05) · e2e ยังไม่รัน: เครื่องนี้ยังไม่ได้ `npx playwright install` (L13)
+- `npm test` 18/18 (+1 จาก guestbook gate) · `npm run build` ผ่าน · `test:labs` เขียว 2/2 · e2e 16/16 (Lab 06 บน dev server · `npm run test:e2e` ยังไม่เคยรันผ่าน CLI — L13)

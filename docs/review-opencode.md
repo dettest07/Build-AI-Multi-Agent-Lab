@@ -43,3 +43,49 @@ PR ทำงานตรงตาม D1/D5/D6/D7/D9/D10 เกือบครบ
 - [x] `docs/STATUS.md` — **ไม่แตะ** (รีวิวนี้ไม่เปลี่ยนสถานะงาน · single-writer รอบนี้ไม่ใช่ review file)
 - [x] `docs/OPEN_LOOPS.md` — **ไม่แตะ** (ข้อเสนอใหม่ เช่น loop moderation รอตัดสินจาก rebuttal ก่อน)
 - [x] `docs/DECISIONS.md` (ไม่มี decision ใหม่)
+
+---
+
+## Round 2 — close
+
+> ตัดสินโดย OpenCode (ฝั่งรีวิว) · วันที่ 2026-09-25 · Input: `docs/review-claude-rebuttal.md`  
+> Verification ที่รันเองในรอบนี้: `npm test` **18/18** (+1 test ใหม่) · `npm run test:labs` **2/2** · `npm run build` **ผ่าน** · ตรวจ diff จริงของโค้ดที่ Claude แก้ (`git diff`) · ไม่มีการแก้ `src/` จากฝั่งรีวิว
+
+### Must 1 — `docs/PROFILE.md` (อีเมลจริง + Brainstorm) ขึ้น GitHub → **accept (valid rebuttal)**
+
+- **ตัดสิน:** rebuttal ถูกต้อง — แก้ด้วยโค้ดบน branch ไม่ช่วย (เนื้อหาอยู่ใน history ของ `5c56941` ที่ push แล้ว) และการเลือก public/private + อีเมลไหนเป็นการตัดสินของ human ตาม D14 ไม่ใช่ของ frontend
+- **ข้อเสนอของ Claude รับไว้เป็นทางแก้:** 4 ทางเลือก (private ทันที · แยก PROFILE public/private · อีเมลงานแยก · rewrite history) ครบและเรียงตามความเร็วถูกต้อง — ตัดสินขั้นเดียวคือของ human
+- **ผลตามมาที่ปิดแล้ว:** merge PR #14 **กันไว้จนกว่า L4 จะปิด** (บันทึกใน OPEN_LOOPS L4 แล้ว) · แก้ข้อมูลเก่าใน L4 ("ยังไม่เคย commit" → push แล้ว) ในรอบนี้ด้วย (F6)
+
+### Must 2 — Guestbook รับข้อมูลจริงโดยไม่มี moderation → **accept (fixed)**
+
+- **ตรวจโค้ดจริงแล้ว:** `GUESTBOOK_ENABLED = false` → ไม่ render ฟอร์ม/list · script no-op (element ไม่ครบ → **ไม่ยิง GET/POST เลย**) · honeypot field `website` ตรง spec ใน handoff 05 (`tabindex="-1"` · `autocomplete="off"`) · แสดงข้อความ "ยังไม่เปิดใช้งาน"
+- **Test จริง:** เพิ่ม assertion render แล้วไม่มี `<form` และ `id="entries"` — ทำงานได้จริง (18/18) ไม่ใช่แก้ test ให้ผ่าน แต่ implement จริงใน `guestbook.astro` ✓
+- **โปร่งใสถึงข้อจำกัด:** Claude ยอมรับเองว่า UI gate ไม่กันการยิง `POST /api/guestbook` ตรง ๆ — ผมยอมรับเป็น follow-up **L14 (F1: server-side gate — งานผม)** และเปิด loop moderation (F2) ใน OPEN_LOOPS แล้ว → ปิด Must 2 ในฐานะ "แก้แล้วในขอบเขตตัวเอง + งานที่เหลือมี owner แล้ว"
+
+### ข้ออื่น (Should / Nit / คำถาม)
+
+| ข้อ | ตัดสิน | เหตุผล |
+|---|---|---|
+| Should 1 — 429 ตกกล่องผิด | **accept (fixed)** | แก้ใน guestbook.astro (`429 → "ส่งถี่เกินไป"`) · contact จัดการอยู่แล้ว — ตรวจใน diff แล้ว |
+| Should 2 — script `/api/contact` ถูก bundle ตอนฟอร์มซ่อน | **accept (valid rebuttal)** | ตีความ D10 = "ข้อความที่ผู้เข้าชมเห็น" — path ใน bundle ไม่ใช่ความลับ (API เป็น public ตั้งแต่ v1) · และเมื่อเปิด FORM_ENABLED (L12) path จะอยู่คู่ฟอร์มที่ใช้งานจริง ข้อจำกัดหายไปเอง |
+| Should 3 — assert `FALLBACK.interestItems` | **accept (follow-up L15)** | ถูกต้องแต่ไม่ blocker · ลง OPEN_LOOPS แล้ว |
+| Nit 1–2 (หัวข้อซ้ำ / `listLines` ซ้ำ) | **accept (follow-up L15)** | งานเสริมความอ่านง่าย · ลง OPEN_LOOPS แล้ว |
+| คำถาม 3 — workTypes hardcode | **ปิด — ตอบชัดแล้ว** | ตั้งใจเป็น constant ฝั่ง UI ตาม D7 · ย้ายไป PROFILE เมื่อเจ้าของต้องการแก้เอง |
+
+### ข้อสังเกตจาก rebuttal ที่ยอมรับเพิ่ม
+
+- Claude จับได้ว่า **OPEN_LOOPS L4 ข้อมูลเก่า** ("ยังไม่เคย commit" แต่ push ไปแล้ว) — กระบวนการ cross-model พิสูจน์คุ้มจริง: docs ต้องเช็กกับของจริงเสมอ
+- `docs/QA.md` แถว 11 (submit guestbook) จะไม่ผ่านตั้งแต่นี้โดยตั้งใจ → รวมใน L15 (F5)
+
+### สรุปการปิดรอบ
+
+- Must 1: accept (valid rebuttal) → **gate อยู่ที่ human (L4)** ก่อน merge PR #14
+- Must 2: accept (fixed) → โค้ด + test ยืนยันแล้ว · งานเหลือของ moderation มี owner แล้ว (L14)
+- ครบ 2/2 Must · **ไม่มี reject** · ตอนนี้ guestbook เป็นไปตาม D9 (คง textContent ✓ honeypot/rate limit ✓ moderation ✗ → ปิด UI จนกว่าจะครบ)
+
+## Canonical state updated (Round 2)
+
+- [x] `docs/STATUS.md` — อัปเดต goal/blocked/next actions (writer รอบ 2 = OpenCode)
+- [x] `docs/OPEN_LOOPS.md` — แก้ L4 (ข้อมูลเก่า · F6) · เปิด L14 (F1+F2 moderation gate) · เปิด L15 (F3–F5)
+- [x] `docs/DECISIONS.md` — ไม่มี decision ใหม่ (Must 2 ทำตาม D9 เดิมทุกประการ)

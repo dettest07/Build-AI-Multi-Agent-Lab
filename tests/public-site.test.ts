@@ -110,4 +110,13 @@ describe('rendered pages (Astro Container API)', () => {
       expect(html, 'guestbook must not be linked (D9)').not.toMatch(/href="\/guestbook"/);
     });
   }
+
+  it('/guestbook renders no form or entry list until moderation exists (D9)', async () => {
+    const container = await AstroContainer.create();
+    const html = visibleHtml(
+      await container.renderToString(Guestbook, { request: new Request('http://localhost/guestbook') }),
+    );
+    expect(html).not.toMatch(/<form\b/);
+    expect(html).not.toMatch(/id="entries"/);
+  });
 });
