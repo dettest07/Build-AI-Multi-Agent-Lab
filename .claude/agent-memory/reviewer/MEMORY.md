@@ -1,0 +1,2 @@
+- [Recurring review risks](review_recurring_risks.md) — test strips frontmatter (meta leak), FALLBACK leak, guestbook innerHTML; first checks for Lab 04/07
+- [Debate stances](reviewer_debate_stances.md) — honeypot needs server, no JS email, ship gate L3+L4; DECISIONS.md is source of truth
