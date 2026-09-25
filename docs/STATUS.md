@@ -17,7 +17,7 @@ Updated by: Claude
 - Lab 01: Brainstorm (superpowers) → เพิ่ม `## Brainstorm` ท้าย `docs/PROFILE.md` (Must/Nice/Later · มุม About · สิ่งที่หลีกเลี่ยง)
 - Lab 02: `docs/DEBATE.md` (Brand · UX · Devil) → `docs/DECISIONS.md` D1–D11 · แก้ PROFILE เฉพาะ Headline + Tone (D11)
 - Lab 02 (รอบใหม่ 2026-09-25): reviewer ตั้งคำถาม / frontend ตอบ 2 รอบ → `DEBATE.md` เขียนใหม่ · `DECISIONS.md` D1–D14 แทนชุดเดิม · PROFILE ย้าย Tagline/Proof เป็นหัวข้อแยก (D13)
-- Lab 03: GitHub issues #1–#5 จาก D1–D6 (ตารางท้าย `docs/DECISIONS.md`)
+- Lab 03: GitHub issues #1–#13 ครบ D1–D14 (ตารางท้าย `docs/DECISIONS.md`)
 - Persistent memory (harness `memory: project`): `.claude/agent-memory/reviewer/` · `.claude/agent-memory/frontend/`
 
 ## In progress
@@ -31,7 +31,7 @@ Updated by: Claude
 ## Next actions
 
 1. เจ้าของตอบ L3–L5 + L8 (อีเมลงาน · repo public? · Bio/Interests/Services · "ประเมินฟรี") — L3/L4/L5 เป็น ship gate (D14)
-2. Lab 03 ✅ issues #1–#5 (D1–D6) — ต่อ D7–D14 ได้ถ้าต้องการ
+2. Lab 03 ✅ issues #1–#13 ครบ D1–D14
 3. Lab 04: แก้ parser (L2) + test กันหลุด (L9) + UI ตามเกณฑ์ใน DECISIONS
 
 ## Files changed in latest session

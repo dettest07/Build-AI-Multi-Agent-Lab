@@ -61,3 +61,11 @@
 | [#3](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/3) | [D2][D4] กลุ่มเป้าหมาย / บริการ และคำเคลมบนเว็บ | D2 + D4 (L5) |
 | [#4](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/4) | [D3] น้ำเสียง "ผม" คุยกับ "คุณ" + การแสดง Bio | D3 (L5 · D14) |
 | [#5](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/5) | [D5] IA + Navigation: 4 หน้า · label ไทย · URL อังกฤษ | D5 (+D9) |
+| [#6](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/6) | [D7] Contact: อีเมล mailto เป็นช่องทางหลัก · ซ่อนฟอร์มจนกว่า backend พร้อม | D7 (L3 · L7) |
+| [#7](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/7) | [D8] ราคา + CTA: ไม่แสดงตัวเลขราคา · CTA "คุยเรื่องโปรเจกต์" | D8 (L8) |
+| [#8](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/8) | [D9] Guestbook ไม่อยู่ใน v1 · เปลี่ยน innerHTML เป็น textContent | D9 (L6 · L7) |
+| [#9](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/9) | [D10] Visual ธีมสว่าง + ลบข้อความภายในที่หลุดขึ้นเว็บ | D10 |
+| [#10](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/10) | [D11] Test กันหลุด: จับข้อความคอร์สใน frontmatter + ไม่ตก FALLBACK | D11 (L9 · L10) |
+| [#11](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/11) | [D12] Projects → "ประเภทปัญหาที่เคยแก้" 3–5 ข้อ (ไม่ระบุลูกค้า) | D12 (L5) |
+| [#12](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/12) | [D13] PROFILE: แยก ## Tagline / ## Proof ออกจาก ## Tone | D13 (L4) |
+| [#13](https://github.com/dettest07/Build-AI-Multi-Agent-Lab/issues/13) | [D14] Gate ก่อน ship: ปิด L3 / L4 / L5 + QA view-source ทุกหน้า | D14 |
