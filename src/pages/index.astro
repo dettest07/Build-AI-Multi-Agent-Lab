@@ -1,22 +1,52 @@
 ---
+// Hero order per DECISIONS D1: Tagline (H1) → Headline → Proof → CTA.
+// No Bio until rewritten in "ผม" voice (D3) · no AI on Home (D2) · no Guestbook card (D9).
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
+const [mainService, ...otherServices] = profile.services;
 ---
-<BaseLayout title={`${profile.name} · Home`} description={profile.headline}>
-  <section class="card">
-    <p style="margin:0;color:var(--accent);font-weight:700">Personal branding site</p>
-    <h1>{profile.name}</h1>
-    <p style="font-size:1.2rem;color:var(--text)">{profile.headline}</p>
-    <p>{profile.bio}</p>
-    <p><strong>Audience:</strong> {profile.audience}</p>
+<BaseLayout page="หน้าแรก">
+  <section class="card hero">
+    <p class="eyebrow">{profile.name}</p>
+    <h1>{profile.tagline || profile.headline}</h1>
+    {profile.tagline && <p class="headline">{profile.headline}</p>}
+    {profile.proof && <p class="proof">{profile.proof}</p>}
+    <p><a class="btn" href="/contact">คุยเรื่องโปรเจกต์</a></p>
   </section>
-  <section class="grid">
-    <a class="card" href="/about"><h2>About</h2><p>เรื่องราวและเส้นทาง</p></a>
-    <a class="card" href="/interests"><h2>Interests</h2><p>หัวข้อที่สนใจ</p></a>
-    <a class="card" href="/contact"><h2>Contact</h2><p>ส่งข้อความถึงฉัน</p></a>
-    <a class="card" href="/guestbook"><h2>Guestbook</h2><p>ฝากคำทักทาย</p></a>
+
+  {mainService && (
+    <section aria-labelledby="services-title">
+      <h2 id="services-title">บริการ</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>{mainService.name}</h3>
+          {mainService.description && <p>{mainService.description}</p>}
+        </article>
+        {otherServices.map((s) => (
+          <article class="card secondary">
+            <h3>{s.name}</h3>
+            {s.description && <p>{s.description}</p>}
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="grid" aria-label="หน้าอื่น ๆ">
+    <a class="card" href="/about"><h2>เกี่ยวกับ</h2><p>ประสบการณ์และวิธีทำงานของผม</p></a>
+    <a class="card" href="/interests"><h2>ความสนใจ</h2><p>หัวข้อที่ผมติดตามอยู่</p></a>
+    <a class="card" href="/contact"><h2>ติดต่อ</h2><p>เล่าโปรเจกต์ของคุณให้ผมฟัง</p></a>
   </section>
 </BaseLayout>
 
+<style>
+  .hero { padding: 2.5rem 2rem; }
+  .eyebrow { margin: 0; color: var(--accent); font-weight: 700; }
+  .hero h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); margin: 0.4rem 0 0.8rem; color: var(--text); }
+  .headline { font-size: 1.15rem; color: var(--text); margin: 0 0 0.6rem; }
+  .proof { font-size: 0.95rem; margin: 0 0 1.5rem; }
+  h3 { margin-top: 0; }
+  .secondary h3 { color: var(--muted); }
+</style>

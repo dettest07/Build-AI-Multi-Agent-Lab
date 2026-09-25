@@ -1,16 +1,25 @@
 ---
+// Interests use the shared "- ชื่อ — คำอธิบาย" format (DECISIONS D6); name-only lines render the name.
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
 ---
-<BaseLayout title={`Interests · ${profile.name}`}>
+<BaseLayout page="ความสนใจ">
   <section class="card">
-    <h1>Interests</h1>
-    <ul>
-      {profile.interests.map((item) => <li>{item}</li>)}
+    <h1>สิ่งที่ผมสนใจ</h1>
+    <ul class="interests">
+      {profile.interestItems.map((item) => (
+        <li>
+          <strong>{item.name}</strong>
+          {item.description && <span> — {item.description}</span>}
+        </li>
+      ))}
     </ul>
-    <p>อัปเดตรายการสิ่งที่สนใจเร็ว ๆ นี้</p>
   </section>
 </BaseLayout>
 
+<style>
+  .interests { padding-left: 1.2rem; }
+  .interests strong { color: var(--text); }
+</style>

@@ -1,9 +1,23 @@
 ---
+// Theme + nav live here only (DECISIONS D5 · D10). Titles use "หน้า · ชื่อ".
+import { loadProfile } from '../lib/profile';
+
 interface Props {
-  title?: string;
+  /** Page label, e.g. "เกี่ยวกับ" — rendered as "<page> · <name>". */
+  page: string;
   description?: string;
+  noindex?: boolean;
 }
-const { title = 'Personal Site', description = 'Personal branding site for the multi-agent course' } = Astro.props;
+const profile = loadProfile();
+const { page, description = profile.headline, noindex = false } = Astro.props;
+const title = `${page} · ${profile.name}`;
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: 'หน้าแรก', current: path === '/' },
+  { href: '/about', label: 'เกี่ยวกับ', current: path.startsWith('/about') },
+  { href: '/interests', label: 'ความสนใจ', current: path.startsWith('/interests') },
+];
+const contactCurrent = path.startsWith('/contact');
 ---
 <!doctype html>
 <html lang="th">
@@ -11,63 +25,89 @@ const { title = 'Personal Site', description = 'Personal branding site for the m
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <style is:global>
+      /* Light, minimal (PROFILE Tone). All pairs below meet WCAG AA on --bg / --card. */
       :root {
-        --bg: #0b1020;
-        --card: #141a2f;
-        --text: #eef2ff;
-        --muted: #a5b4d4;
-        --accent: #7c9cff;
-        --border: #243056;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --accent: #1d4ed8;
+        --accent-hover: #1e40af;
+        --on-accent: #ffffff;
+        --border: #e2e8f0;
+        --focus: #1d4ed8;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        font-family: "Segoe UI", system-ui, sans-serif;
-        background: radial-gradient(circle at top, #17203a, var(--bg) 45%);
+        font-family: "Segoe UI", "Noto Sans Thai", system-ui, sans-serif;
+        background: var(--bg);
         color: var(--text);
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      main { width: min(920px, 92vw); margin: 0 auto; padding: 2rem 0 4rem; }
+      a { color: var(--accent); text-underline-offset: 3px; }
+      a:hover { color: var(--accent-hover); }
+      :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+      .wrap { width: min(920px, 92vw); margin: 0 auto; }
+      header { border-bottom: 1px solid var(--border); background: var(--card); }
+      nav { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; padding: 1rem 0; }
+      nav .brand { color: var(--text); font-weight: 700; text-decoration: none; margin-right: auto; }
+      nav a.link { color: var(--muted); font-weight: 600; text-decoration: none; }
+      nav a.link:hover, nav a.link[aria-current="page"] { color: var(--text); }
+      nav a.link[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; }
+      main { flex: 1; padding: 2rem 0 4rem; }
+      footer { border-top: 1px solid var(--border); padding: 1.5rem 0; color: var(--muted); font-size: 0.9rem; }
       .card {
-        background: color-mix(in srgb, var(--card) 92%, white 8%);
+        background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 16px;
+        border-radius: 14px;
         padding: 1.25rem 1.5rem;
         margin: 1rem 0;
       }
-      nav {
-        display: flex; gap: 1rem; flex-wrap: wrap;
-        width: min(920px, 92vw); margin: 0 auto; padding: 1.25rem 0;
-        border-bottom: 1px solid var(--border);
+      a.card { display: block; color: inherit; text-decoration: none; }
+      a.card:hover { border-color: var(--accent); }
+      a.card h2 { color: var(--accent); }
+      h1, h2 { line-height: 1.25; }
+      p, li { color: var(--muted); line-height: 1.7; }
+      .btn {
+        display: inline-block; background: var(--accent); color: var(--on-accent);
+        font-weight: 700; padding: 0.7rem 1.2rem; border-radius: 10px; text-decoration: none;
+        border: 0; cursor: pointer; font: inherit; font-weight: 700;
       }
-      nav a { color: var(--muted); font-weight: 600; }
-      nav a[aria-current="page"] { color: var(--text); }
-      h1, h2 { line-height: 1.2; }
-      p, li { color: var(--muted); line-height: 1.6; }
-      input, textarea, button {
-        font: inherit; border-radius: 10px; border: 1px solid var(--border);
-        background: #0f1528; color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
+      .btn:hover { background: var(--accent-hover); color: var(--on-accent); }
+      .btn.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+      nav .btn { padding: 0.45rem 0.9rem; }
+      nav .btn[aria-current="page"] { background: var(--accent-hover); }
+      input, textarea, select {
+        font: inherit; border-radius: 10px; border: 1px solid #94a3b8;
+        background: var(--card); color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
       }
-      button { background: var(--accent); color: #081018; font-weight: 700; cursor: pointer; width: auto; }
       label { display: block; margin: 0.75rem 0 0.35rem; color: var(--text); font-weight: 600; }
       .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .grid > .card { margin: 0; }
     </style>
   </head>
   <body>
-    <nav aria-label="หลัก">
-      <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a>
-      <a href="/about" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>About</a>
-      <a href="/interests" aria-current={Astro.url.pathname.startsWith('/interests') ? 'page' : undefined}>Interests</a>
-      <a href="/contact" aria-current={Astro.url.pathname.startsWith('/contact') ? 'page' : undefined}>Contact</a>
-      <a href="/guestbook" aria-current={Astro.url.pathname.startsWith('/guestbook') ? 'page' : undefined}>Guestbook</a>
-    </nav>
-    <main>
+    <header>
+      <nav class="wrap" aria-label="หลัก">
+        <a class="brand" href="/">{profile.name}</a>
+        {links.map((l) => (
+          <a class="link" href={l.href} aria-current={l.current ? 'page' : undefined}>{l.label}</a>
+        ))}
+        <a class="btn" href="/contact" aria-current={contactCurrent ? 'page' : undefined}>ติดต่อ</a>
+      </nav>
+    </header>
+    <main class="wrap">
       <slot />
     </main>
+    <footer>
+      <div class="wrap">© {new Date().getFullYear()} {profile.name}</div>
+    </footer>
   </body>
 </html>
