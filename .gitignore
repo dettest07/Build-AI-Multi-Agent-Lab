@@ -32,3 +32,4 @@ docs/_pr-comment.md
 
 # instructor (should never be in template)
 instructor/
+.playwright-mcp/

@@ -46,24 +46,69 @@ export function getDb(): Database.Database {
   return db;
 }
 
-/** Stub: Lab 05 must implement validation + insert. */
-export function insertContact(_input: {
+/** Thrown on invalid input — callers must map this to HTTP 400 with a safe message. */
+export class ValidationError extends Error {
+  constructor(field: string, reason: string) {
+    super(`invalid input: ${field} ${reason}`);
+    this.name = 'ValidationError';
+  }
+}
+
+/** Trim + type/length check. Throws ValidationError — never echoes user values. */
+function clean(value: unknown, field: string, max: number): string {
+  if (typeof value !== 'string') throw new ValidationError(field, 'must be a string');
+  const v = value.trim();
+  if (v.length === 0) throw new ValidationError(field, 'must not be empty');
+  if (v.length > max) throw new ValidationError(field, `too long (max ${max})`);
+  return v;
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Validate + insert a contact message, return the persisted row. */
+export function insertContact(input: {
   name: string;
   email: string;
   message: string;
 }): ContactMessage {
-  throw new Error('NOT_IMPLEMENTED: insertContact — Lab 05 OpenCode');
+  const name = clean(input?.name, 'name', 80);
+  const email = clean(input?.email, 'email', 120);
+  const message = clean(input?.message, 'message', 1950);
+  if (!EMAIL_RE.test(email)) throw new ValidationError('email', 'invalid format');
+
+  const d = getDb();
+  const result = d
+    .prepare('INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)')
+    .run(name, email, message);
+  const row = d
+    .prepare('SELECT id, name, email, message, created_at FROM contact_messages WHERE id = ?')
+    .get(Number(result.lastInsertRowid));
+  if (!row) throw new Error('insert failed');
+  return row as ContactMessage;
 }
 
-/** Stub: Lab 05 must implement. */
+/** List guestbook entries, newest first. */
 export function listGuestbook(): GuestbookEntry[] {
-  throw new Error('NOT_IMPLEMENTED: listGuestbook — Lab 05 OpenCode');
+  return getDb()
+    .prepare('SELECT id, name, message, created_at FROM guestbook ORDER BY id DESC')
+    .all() as GuestbookEntry[];
 }
 
-/** Stub: Lab 05 must implement. */
-export function insertGuestbook(_input: {
+/** Validate + insert a guestbook entry, return the persisted row. */
+export function insertGuestbook(input: {
   name: string;
   message: string;
 }): GuestbookEntry {
-  throw new Error('NOT_IMPLEMENTED: insertGuestbook — Lab 05 OpenCode');
+  const name = clean(input?.name, 'name', 80);
+  const message = clean(input?.message, 'message', 500);
+
+  const d = getDb();
+  const result = d
+    .prepare('INSERT INTO guestbook (name, message) VALUES (?, ?)')
+    .run(name, message);
+  const row = d
+    .prepare('SELECT id, name, message, created_at FROM guestbook WHERE id = ?')
+    .get(Number(result.lastInsertRowid));
+  if (!row) throw new Error('insert failed');
+  return row as GuestbookEntry;
 }

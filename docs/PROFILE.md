@@ -1,18 +1,51 @@
 # PROFILE
 
 ## Name
-Your Name
+Suradech Leelakiatvanich
 
 ## Headline
-Builder · learner · multi-agent course
+นักพัฒนา .NET / C# ที่ออกแบบระบบให้เป็นระเบียบและคำนึงถึงความปลอดภัยตั้งแต่ต้น
 
 ## Bio
-Replace this after Lab 01 interview.
+Suradech เป็น Full-stack Developer ที่ทำงานกับ .NET และ C# มากว่า 10 ปี ดูแลงานได้ครบตั้งแต่ฝั่งหน้าบ้าน หลังบ้าน ไปจนถึงฐานข้อมูล SQL Server
+
+นอกจากการเขียนโค้ด Suradech ให้ความสำคัญกับการออกแบบระบบงานให้เป็นระเบียบตั้งแต่ต้น และการแก้ไขปัญหาด้าน security เพื่อให้ระบบที่ส่งมอบปลอดภัยและดูแลต่อได้ง่าย
+
+ปัจจุบันสนใจเรื่อง AI ควบคู่กับงานพัฒนาซอฟต์แวร์ หากคุณกำลังมองหานักพัฒนา .NET สำหรับโปรเจกต์ของคุณ ติดต่อได้ทางอีเมลด้านล่าง
 
 ## Audience
-Peers and hiring managers
+ลูกค้าและผู้ที่ต้องการจ้างนักพัฒนา Full-stack / .NET สำหรับโปรเจกต์ของตน
 
 ## Interests
-- AI agents
-- Web
-- Teaching
+- .NET
+- AI
+- การออกแบบระบบงาน
+- การแก้ไขปัญหาด้าน Security
+
+## Contact
+- email: dettest@gmail.com
+- github: — (ไม่แสดง)
+- linkedin: —
+
+## Tone
+- สีหลัก / บรรยากาศ: สว่าง มินิมอล (พื้นขาว/เทาอ่อน) · สีเน้นให้ frontend เลือกใน Lab 04
+- น้ำเสียง: มืออาชีพ · บุรุษที่ 1 "ผม" คุยกับ "คุณ" ทั้งเว็บ (D3)
+
+## Tagline
+ออกแบบก่อนเขียน ปลอดภัยก่อนส่ง
+
+## Proof
+Full-stack .NET / C# · SQL Server · ประสบการณ์ 10 ปี
+
+## ไม่แสดงบนเว็บ
+- ข้อมูลเงินเดือน
+- รูปถ่าย
+- GitHub
+
+## Brainstorm
+- เป้าหมายเว็บ: ได้งาน freelance (.NET) + งานที่ปรึกษา (architecture / security)
+- Must: Hero + ปุ่มติดต่อ · Services 2 กลุ่ม · Projects 3 ชิ้น (ระบุชื่อได้เมื่อลูกค้าอนุญาต) · Contact ระบุประเภทงาน · Tech stack
+- Nice: บทความรายเดือน (.NET / Security / AI) · ขั้นตอนการทำงาน · Testimonial
+- Later: Security checklist ดาวน์โหลด · RSS/newsletter · ผลงาน AI · ภาษาอังกฤษ
+- มุม About ที่เลือก: "ออกแบบก่อนเขียน ปลอดภัยก่อนส่ง" (สำรอง: 10 ปีกับระบบที่ต้องไม่ล่ม / นักพัฒนา .NET ที่ตามทัน AI)
+- หลีกเลี่ยง: ข้อมูลส่วนตัว · ข้อมูล/ช่องโหว่ของลูกค้า · guestbook ไม่มีการกรอง · CMS/login/แชทบอทในรอบแรก
